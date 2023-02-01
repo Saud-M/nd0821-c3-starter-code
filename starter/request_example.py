@@ -18,12 +18,13 @@ data = {
     "native_country": "United-States"
 }
 
-get_request = requests.get('http://localhost:8000/')
-response = requests.post('http://localhost:8000/', data=json.dumps(data))
+endpoint = "https://employees-model-udacity.onrender.com/"
+get_request = requests.get(endpoint)
+response = requests.post(endpoint, data=json.dumps(data))
 
 
-print(get_request.status_code)
+print(f"Endpoint: {endpoint}")
+print(f"GET: {get_request.status_code}")
 print(get_request.json())
-
-print(response.status_code)
+print(f"POST: {response.status_code}")
 print(response.json())
