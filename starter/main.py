@@ -13,6 +13,10 @@ model_path = os.path.join(file_dir, 'model/rf_model.pkl')
 encoder_path = os.path.join(file_dir, 'model/encoder.pkl')
 lb_path = os.path.join(file_dir, 'model/lb.pkl')
 
+model = pickle.load(open(model_path, 'rb'))
+encoder = pickle.load(open(encoder_path, 'rb'))
+lb = pickle.load(open(lb_path, 'rb'))
+
 
 
 class Data_sample(BaseModel):
@@ -36,10 +40,11 @@ class Data_sample(BaseModel):
 
 @app.get('/')
 async def main_page():
-	return "Main GET page"
+	return {"message": "Main GET page"}
 
 @app.post('/')
 async def predict(sample: Data_sample):
+	print('post request')
 	sample = {key.replace('_', '-'): [value] for key, value in sample.__dict__.items()}
 	data = pd.DataFrame.from_dict(sample)
 
@@ -53,9 +58,12 @@ async def predict(sample: Data_sample):
 		"sex",
 		"native-country",
 	]
-
+	print('DATA: ')
+	print(data)
 	X, _, _, _ = process_data(data, categorical_features=cat_features, label=None, 
-	training=False, encoder=encoder, lb=lb)
+		training=False, encoder=encoder, lb=lb)
 
 	pred = inference(model, X)[0]
+	print('PREDICTION: ')
+	print(pred)
 	return '<=50K' if pred == 0 else '>50K'
