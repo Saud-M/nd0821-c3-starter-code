@@ -41,21 +41,21 @@ async def main_page():
 @app.post('/')
 async def predict(sample: Data_sample):
 	sample = {key.replace('_', '-'): [value] for key, value in sample.__dict__.items()}
-    data = pd.DataFrame.from_dict(sample)
+	data = pd.DataFrame.from_dict(sample)
 
-    cat_features = [
-        "workclass",
-        "education",
-        "marital-status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        "native-country",
-    ]
+	cat_features = [
+		"workclass",
+		"education",
+		"marital-status",
+		"occupation",
+		"relationship",
+		"race",
+		"sex",
+		"native-country",
+	]
 
-    X, _, _, _ = process_data(data, categorical_features=cat_features, label=None, 
-        training=False, encoder=encoder, lb=lb)
+	X, _, _, _ = process_data(data, categorical_features=cat_features, label=None, 
+	training=False, encoder=encoder, lb=lb)
 
-    pred = inference(model, X)[0]
-    return '<=50K' if pred == 0 else '>50K'
+	pred = inference(model, X)[0]
+	return '<=50K' if pred == 0 else '>50K'
